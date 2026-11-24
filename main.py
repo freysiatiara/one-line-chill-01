@@ -40,6 +40,11 @@ def main():
     with open(path, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(ENTRY + "\n")
     os.chmod(path, 0o644)
+    # Read-back check: the file on disk must be byte-identical to the
+    # intended entry, otherwise the submission would be silently wrong.
+    with open(path, "r", encoding="utf-8", newline="") as handle:
+        if handle.read() != ENTRY + "\n":
+            raise ValueError("read-back mismatch: entry.txt does not match ENTRY")
 
 
 if __name__ == "__main__":
